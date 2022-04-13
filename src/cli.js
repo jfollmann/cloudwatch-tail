@@ -6,8 +6,13 @@ const AWS = require('aws-sdk')
 const Cache = require('lru-cache-fs')
 const inquirer = require('inquirer')
 const out = require('simple-output')
+const pkg = require('../package.json')
 const commander = require('commander')
 const { list: listAwsRegions } = require('aws-regions')
+const { promisify } = require('util')
+const { exec } = require('child_process');
+
+const execAsync = promisify(exec);
 inquirer.registerPrompt('autocomplete', require('inquirer-autocomplete-prompt'))
 
 const cache = new Cache({
@@ -72,6 +77,16 @@ const configureAWSCredentials = (profile, region) => {
   }
 }
 
+const checkVersion = async () => {
+  const currentLocalVersion = pkg.version
+  const currentRemoteVersion =  (await execAsync(`npm view ${pkg.name} version`)).stdout.replace(/\r?\n|\r/g, '')
+  
+  if (currentLocalVersion !== currentRemoteVersion) {
+    out.warn(`Update available: ${currentLocalVersion} => ${currentRemoteVersion}`)
+    out.warn(`Run npm i -g ${pkg.name} to update\r\n`)
+  }
+}
+
 const reRun = () => {
   const { profile, region, logGroupName } = loadCachedValues()
 
@@ -130,6 +145,7 @@ const runInterative = async () => {
 
 const main = async () => {
   out.node(`CloudWatchTail (CWT)`)
+  await checkVersion()
 
   if(process.env.CWT_RERUN)
     return reRun()
