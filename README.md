@@ -18,7 +18,7 @@ npm i -g cloudwatch-tail
 
 ## 🎯 CLI in action
   
-![cli](https://github.com/jfollmann/sample-cloud-watcher/blob/main/docs/cwt-in-action.git?raw=true)
+![cli](https://github.com/jfollmann/cloudwatch-tail/blob/main/docs/cwt-in-action.gif?raw=true)
 
 <br />
 
