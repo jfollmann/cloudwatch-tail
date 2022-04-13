@@ -3,7 +3,7 @@ CLI Utility for Watching AWS CloudWatch Logs
 
 ## Table of Contents
 - [Install](#rocket-install)
-- [CLI in action](#🎯-cli-in-action)
+- [CLI in action](#rocket-cli-in-action)
 - [Usage](#red_circle-usage)
 - [Repeat the last tail](#repeat-repeat-the-last-tail)
 - [Features](#heart_eyes-features)
