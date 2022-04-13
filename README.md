@@ -2,12 +2,12 @@
 CLI Utility for Watching AWS CloudWatch Logs
 
 ## Table of Contents
-- [Install](#🚀-install)
+- [Install](#rocket-install)
 - [CLI in action](#🎯-cli-in-action)
-- [Usage](#🎯-usage)
-- [Repeat the last tail](#repeat-the-last-tail)
-- [Features](#😍-features)
-- [Help](#💁-help)
+- [Usage](#red_circle-usage)
+- [Repeat the last tail](#repeat-repeat-the-last-tail)
+- [Features](#heart_eyes-features)
+- [Help](#raising_hand-help)
 
 ## 🚀 Install
 ```bash
@@ -16,13 +16,13 @@ npm i -g cloudwatch-tail
 
 <br />
 
-## 🎯 CLI in action
+## :rocket: CLI in action
   
 ![cli](https://github.com/jfollmann/cloudwatch-tail/blob/main/docs/cwt-in-action.gif?raw=true)
 
 <br />
 
-## 🎉 Usage
+## :red_circle: Usage
 ```bash
 cwt
 ```
@@ -37,7 +37,7 @@ cwt
 
 <br />
 
-## 😍 Features
+## :heart_eyes: Features
 - Interactive interface to filter your log groups
 - Support AWS profiles
 - Select any log group to start watching
@@ -46,7 +46,7 @@ cwt
 
 <br />
 
-## 💁 Help
+## :raising_hand: Help
 ```
 cwt --h 
 
