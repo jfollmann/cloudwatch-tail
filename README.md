@@ -5,7 +5,7 @@ CLI Utility for Watching AWS CloudWatch Logs
 - [Install](#🚀-install)
 - [CLI in action](#🎯-cli-in-action)
 - [Usage](#🎯-usage)
-- [Repeat the last tail](#🔁-repeat-the-last-tail)
+- [Repeat the last tail](#repeat-the-last-tail)
 - [Features](#😍-features)
 - [Help](#💁-help)
 
@@ -29,7 +29,7 @@ cwt
 
 <br />
 
-## 🔁 Repeat the last tail
+## :repeat: Repeat the last tail
 **cwt** provides many options to make it easier to rerun the last log tail, either through having it selected as default option the next time you run the ntl command, or by using one of the following:
 - **Convenient way**: `cw` command shorhand 🥰
 - Using a `--rerun` or `-r`, e.g: `cwt -r`
