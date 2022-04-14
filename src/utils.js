@@ -32,7 +32,7 @@ const prompts = {
         }
       }
     ]),
-  second: (logGroups) => 
+  second: (logGroups) =>
     inquirer.prompt([
       {
         message: 'AWS log group name',

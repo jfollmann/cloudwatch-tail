@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-"use strict"
+'use strict'
 
 process.env.CWT_RERUN = true
-require("./cli.js")
+require('./cli.js')

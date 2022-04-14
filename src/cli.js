@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-"use strict"
+'use strict'
 
 const { warn, node } = require('simple-output')
 const { loadCachedValues, setCacheValues } = require('./cache')
@@ -35,13 +35,12 @@ const runInterative = async () => {
 
 const main = async () => {
   setCacheValues('', '', '')
-  node(`CloudWatchTail (CWT)`)
+  node('CloudWatchTail (CWT)')
   await checkVersion()
 
-  if (process.env.CWT_RERUN)
-    return reRun()
+  if (process.env.CWT_RERUN) { return reRun() }
 
-  const { opts } = configureCommander();
+  const { opts } = configureCommander()
   opts.rerun ? reRun() : runInterative()
 }
 

@@ -17,7 +17,7 @@ const setCacheValues = (profile, region, logGroupName) => {
   cache.fsDump()
 }
 
-module.exports = { 
+module.exports = {
   cache,
   loadCachedValues,
   setCacheValues
