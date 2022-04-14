@@ -10,7 +10,7 @@ inquirer.registerPrompt('autocomplete', require('inquirer-autocomplete-prompt'))
 const execAsync = promisify(exec)
 
 const prompts = {
-  first: (profile) =>
+  first: (profile, region) =>
     inquirer.prompt([
       {
         message: 'AWS profile name',
@@ -22,7 +22,7 @@ const prompts = {
         message: 'AWS region',
         type: 'autocomplete',
         name: 'region',
-        default: 'us-east-1',
+        default: region || 'us-east-1',
         source: (_, input) => {
           const regions = listAwsRegions().map(({ name, code }) => ({ name: `${name} (${code})`, value: code }))
 

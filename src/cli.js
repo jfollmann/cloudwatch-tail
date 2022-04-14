@@ -21,8 +21,8 @@ const reRun = () => {
 }
 
 const runInterative = async () => {
-  const { profile: profileCached } = loadCachedValues()
-  const { profile, region } = await prompts.first(profileCached)
+  const { profile: profileCached, region: regionCached } = loadCachedValues()
+  const { profile, region } = await prompts.first(profileCached, regionCached)
 
   const { cloudWatchService } = configureAWSCredentials(profile, region)
   const logGroups = await loadLogGroups(cloudWatchService)
