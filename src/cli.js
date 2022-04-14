@@ -46,7 +46,7 @@ const loadLogGroups = async (cloudWatchService) => {
 const configureCommander = () => {
   commander
     .option('-r, --rerun', 'Re run', false)
-    .version('1.0.3', '-v, --version')
+    .version(pkg.version, '-v, --version')
     .parse(process.argv)
 
   return { commander, opts: commander.opts() }
