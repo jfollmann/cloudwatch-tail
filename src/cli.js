@@ -34,7 +34,6 @@ const runInterative = async () => {
 }
 
 const main = async () => {
-  setCacheValues('', '', '')
   node('CloudWatchTail (CWT)')
   await checkVersion()
 
