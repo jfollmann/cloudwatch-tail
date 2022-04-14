@@ -28,7 +28,8 @@
     "start": "node src/cli.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "publish": "npm publish --access public"
+    "publish": "npm publish --access public",
+    "prepare": "husky install"
   },
   "license": "ISC",
   "dependencies": {
@@ -45,6 +46,7 @@
     "eslint-config-standard": "^16.0.3",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^5.2.0"
+    "eslint-plugin-promise": "^5.2.0",
+    "husky": "^7.0.4"
   }
 }
