@@ -7,14 +7,14 @@ CLI Utility for Watching AWS CloudWatch Logs
 [![Coverage Status](https://coveralls.io/repos/github/jfollmann/cloudwatch-tail/badge.svg?branch=main)](https://coveralls.io/github/jfollmann/cloudwatch-tail?branch=main)
 
 ## Table of Contents
-- [Install](#rocket-install)
+- [Install](#computer-install)
 - [CLI in action](#rocket-cli-in-action)
 - [Usage](#red_circle-usage)
 - [Repeat the last tail](#repeat-repeat-the-last-tail)
 - [Features](#heart_eyes-features)
 - [Help](#raising_hand-help)
 
-## 🚀 Install
+## :computer: Install
 ```bash
 npm i -g cloudwatch-tail
 ```
