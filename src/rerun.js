@@ -3,4 +3,4 @@
 'use strict'
 
 process.env.CWT_RERUN = true
-require('./cli.js')
+require('./run.js')

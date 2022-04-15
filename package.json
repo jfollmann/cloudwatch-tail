@@ -13,7 +13,7 @@
   },
   "bin": {
     "cw": "src/rerun.js",
-    "cwt": "src/cli.js"
+    "cwt": "src/run.js"
   },
   "keywords": [
     "cloud-watch",
@@ -25,11 +25,14 @@
     "terminal"
   ],
   "scripts": {
-    "start": "node src/cli.js",
+    "start": "node src/run.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "publish": "npm publish --access public",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "test": "jest --passWithNoTests --no-cache --runInBand",
+    "test:watch": "npm t -- --watch",
+    "test:coverage": "npm t -- --coverage"
   },
   "license": "ISC",
   "dependencies": {
@@ -42,11 +45,14 @@
     "simple-output": "^3.0.0"
   },
   "devDependencies": {
+    "@types/jest": "^27.4.1",
+    "aws-sdk-mock": "^5.6.2",
     "eslint": "^7.32.0",
     "eslint-config-standard": "^16.0.3",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.2.0",
-    "husky": "^7.0.4"
+    "husky": "^7.0.4",
+    "jest": "^27.5.1"
   }
 }

@@ -1,13 +1,13 @@
 const { info } = require('simple-output')
-const { SharedIniFileCredentials, CloudWatchLogs, config } = require('aws-sdk')
+const AWS = require('aws-sdk')
 
 const configureAWSCredentials = (profile, region) => {
-  const credentials = new SharedIniFileCredentials({ profile })
-  config.credentials = credentials
+  const credentials = new AWS.SharedIniFileCredentials({ profile })
+  AWS.config.credentials = credentials
 
   return {
     credentials,
-    cloudWatchService: new CloudWatchLogs({ region })
+    cloudWatchService: new AWS.CloudWatchLogs({ region })
   }
 }
 

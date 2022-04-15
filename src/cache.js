@@ -1,24 +1,19 @@
-const Cache = require('lru-cache-fs')
-
-const cache = new Cache({ max: 10, cacheName: 'cwt-rerun-cache' })
-
-const loadCachedValues = () => {
-  const profile = cache.get('profile')
-  const region = cache.get('region')
-  const logGroupName = cache.get('logGroupName')
+const loadCachedValues = (cacheService) => {
+  const profile = cacheService.get('profile')
+  const region = cacheService.get('region')
+  const logGroupName = cacheService.get('logGroupName')
 
   return { profile, region, logGroupName }
 }
 
-const setCacheValues = (profile, region, logGroupName) => {
-  cache.set('profile', profile)
-  cache.set('region', region)
-  cache.set('logGroupName', logGroupName)
-  cache.fsDump()
+const setCacheValues = ({ cacheService, profile, region, logGroupName }) => {
+  cacheService.set('profile', profile)
+  cacheService.set('region', region)
+  cacheService.set('logGroupName', logGroupName)
+  cacheService.fsDump()
 }
 
 module.exports = {
-  cache,
   loadCachedValues,
   setCacheValues
 }

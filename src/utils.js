@@ -9,6 +9,22 @@ inquirer.registerPrompt('autocomplete', require('inquirer-autocomplete-prompt'))
 
 const execAsync = promisify(exec)
 
+const adaptAWSRegions = (itens) => itens.map(({ name, code }) => ({ name: `${name} (${code})`, value: code }))
+
+const handlerRegions = (_, input) => {
+  const regions = adaptAWSRegions(listAwsRegions())
+
+  return input
+    ? regions.filter((item) => item.name.toLocaleLowerCase().includes(input) || item.value.toLocaleLowerCase().includes(input))
+    : regions
+}
+
+const handlerLogGroups = (logGroups, _, input) => {
+  return input
+    ? logGroups.filter((item) => item.name.toLocaleLowerCase().includes(input))
+    : logGroups
+}
+
 const prompts = {
   first: (profile, region) =>
     inquirer.prompt([
@@ -23,13 +39,7 @@ const prompts = {
         type: 'autocomplete',
         name: 'region',
         default: region || 'us-east-1',
-        source: (_, input) => {
-          const regions = listAwsRegions().map(({ name, code }) => ({ name: `${name} (${code})`, value: code }))
-
-          return input
-            ? regions.filter((item) => item.name.toLocaleLowerCase().includes(input) || item.value.toLocaleLowerCase().includes(input))
-            : regions
-        }
+        source: handlerRegions
       }
     ]),
   second: (logGroups) =>
@@ -38,11 +48,7 @@ const prompts = {
         message: 'AWS log group name',
         type: 'autocomplete',
         name: 'logGroupName',
-        source: (_, input) => {
-          return input
-            ? logGroups.filter((item) => item.name.toLocaleLowerCase().includes(input))
-            : logGroups
-        }
+        source: (_, input) => handlerLogGroups(logGroups, _, input)
       }
     ])
 }
@@ -70,5 +76,8 @@ module.exports = {
   prompts,
   checkVersion,
   configureCommander,
-  execAsync
+  execAsync,
+  adaptAWSRegions,
+  handlerRegions,
+  handlerLogGroups
 }

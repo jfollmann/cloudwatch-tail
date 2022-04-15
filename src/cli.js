@@ -1,18 +1,17 @@
-#!/usr/bin/env node
-
-'use strict'
-
 const { warn, node } = require('simple-output')
 const { loadCachedValues, setCacheValues } = require('./cache')
 const { checkVersion, configureCommander, prompts } = require('./utils')
 const { tailLog, configureAWSCredentials, loadLogGroups } = require('./aws')
+const Cache = require('lru-cache-fs')
 
-const reRun = () => {
-  const { profile, region, logGroupName } = loadCachedValues()
+const cacheService = new Cache({ max: 10, cacheName: 'cwt-rerun-cache' })
+
+const reRun = async () => {
+  const { profile, region, logGroupName } = loadCachedValues(cacheService)
 
   if (!profile || !region || !logGroupName) {
     warn('Cache not found. Running interactive mode')
-    return runInterative()
+    return await runInterative()
   }
 
   console.log({ profile, region, logGroupName })
@@ -21,7 +20,7 @@ const reRun = () => {
 }
 
 const runInterative = async () => {
-  const { profile: profileCached, region: regionCached } = loadCachedValues()
+  const { profile: profileCached, region: regionCached } = loadCachedValues(cacheService)
   const { profile, region } = await prompts.first(profileCached, regionCached)
 
   const { cloudWatchService } = configureAWSCredentials(profile, region)
@@ -29,11 +28,11 @@ const runInterative = async () => {
 
   const { logGroupName } = await prompts.second(logGroups)
 
-  setCacheValues(profile, region, logGroupName)
+  setCacheValues({ cacheService, profile, region, logGroupName })
   tailLog(cloudWatchService, logGroupName)
 }
 
-const main = async () => {
+const run = async () => {
   node('CloudWatchTail (CWT)')
   await checkVersion()
 
@@ -43,4 +42,9 @@ const main = async () => {
   opts.rerun ? reRun() : runInterative()
 }
 
-main()
+module.exports = {
+  cacheService,
+  reRun,
+  runInterative,
+  run
+}
