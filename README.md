@@ -1,6 +1,10 @@
 # CloudWatchTail (CWT)
 CLI Utility for Watching AWS CloudWatch Logs
 
+![GitHub package.json version](https://img.shields.io/github/package-json/v/jfollmann/cloudwatch-tail)
+![node-current](https://img.shields.io/node/v/cloudwatch-tail)
+[![Coverage Status](https://coveralls.io/repos/github/jfollmann/cloudwatch-tail/badge.svg?branch=main)](https://coveralls.io/github/jfollmann/cloudwatch-tail?branch=main)
+
 ## Table of Contents
 - [Install](#rocket-install)
 - [CLI in action](#rocket-cli-in-action)
