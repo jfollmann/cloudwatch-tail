@@ -31,6 +31,7 @@
     "publish": "npm publish --access public",
     "prepare": "husky install",
     "test": "jest --passWithNoTests --no-cache --runInBand",
+    "test:staged": "npm t -- --findRelatedTests",
     "test:watch": "npm t -- --watch",
     "test:coverage": "npm t -- --coverage"
   },
