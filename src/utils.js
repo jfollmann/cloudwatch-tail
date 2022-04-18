@@ -14,15 +14,18 @@ const adaptAWSRegions = (itens) => itens.map(({ name, code }) => ({ name: `${nam
 
 const handlerRegions = (_, input) => {
   const regions = adaptAWSRegions(listAwsRegions())
+  const filter = input.toLocaleLowerCase()
 
   return input
-    ? regions.filter(({ name, value }) => name.toLocaleLowerCase().includes(input) || value.toLocaleLowerCase().includes(input))
+    ? regions.filter((item) => item.name.toLocaleLowerCase().includes(filter) || item.value.toLocaleLowerCase().includes(filter))
     : regions
 }
 
 const handlerLogGroups = (logGroups, _, input) => {
+  const filter = input.toLocaleLowerCase()
+
   return input
-    ? logGroups.filter(({ name }) => name.toLocaleLowerCase().includes(input))
+    ? logGroups.filter((item) => item.name.toLocaleLowerCase().includes(filter))
     : logGroups
 }
 
