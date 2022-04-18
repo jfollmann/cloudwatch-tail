@@ -3,6 +3,7 @@ const childProcess = require('child_process')
 const { warn } = require('simple-output')
 const pkg = require('../package.json')
 
+jest.mock('simple-output')
 jest.mock('child_process')
 jest.mock('inquirer', () => ({
   prompt: jest.fn((itens) => itens.map(({ type, name, source }) => ({ type, name, source }))),
@@ -15,7 +16,6 @@ jest.mock('commander', () => ({
   parse: jest.fn().mockReturnThis(),
   opts: jest.fn().mockReturnValue({ rerun: false })
 }))
-jest.mock('simple-output')
 
 describe('Utils Spec', () => {
   const logGroups = [{ name: 'any-log-group-name-1' }, { name: 'any-log-group-name-2' }]
@@ -68,13 +68,13 @@ describe('Utils Spec', () => {
   })
 
   test('Check first prompts list', () => {
-    const sut = prompts.first()
+    const sut = prompts.selectProfileAndRegion()
 
     expect(sut).toEqual(firstPromptExpected)
   })
 
   test('Check second prompts list', () => {
-    const sut = prompts.second(logGroups)
+    const sut = prompts.selectLogGroup(logGroups)
 
     expect(sut).toEqual(secondPromptExpected)
   })

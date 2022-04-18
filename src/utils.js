@@ -1,10 +1,11 @@
+const pkg = require('../package.json')
+
 const { warn } = require('simple-output')
 const { promisify } = require('util')
 const { exec } = require('child_process')
 const { list: listAwsRegions } = require('aws-regions')
 const commander = require('commander')
 const inquirer = require('inquirer')
-const pkg = require('../package.json')
 inquirer.registerPrompt('autocomplete', require('inquirer-autocomplete-prompt'))
 
 const execAsync = promisify(exec)
@@ -15,34 +16,34 @@ const handlerRegions = (_, input) => {
   const regions = adaptAWSRegions(listAwsRegions())
 
   return input
-    ? regions.filter((item) => item.name.toLocaleLowerCase().includes(input) || item.value.toLocaleLowerCase().includes(input))
+    ? regions.filter(({ name, value }) => name.toLocaleLowerCase().includes(input) || value.toLocaleLowerCase().includes(input))
     : regions
 }
 
 const handlerLogGroups = (logGroups, _, input) => {
   return input
-    ? logGroups.filter((item) => item.name.toLocaleLowerCase().includes(input))
+    ? logGroups.filter(({ name }) => name.toLocaleLowerCase().includes(input))
     : logGroups
 }
 
 const prompts = {
-  first: (profile, region) =>
+  selectProfileAndRegion: (cachedProfile, cachedRegion) =>
     inquirer.prompt([
       {
         message: 'AWS profile name',
         type: 'input',
         name: 'profile',
-        default: profile || 'default'
+        default: cachedProfile || 'default'
       },
       {
         message: 'AWS region',
         type: 'autocomplete',
         name: 'region',
-        default: region || 'us-east-1',
+        default: cachedRegion || 'us-east-1',
         source: handlerRegions
       }
     ]),
-  second: (logGroups) =>
+  selectLogGroup: (logGroups) =>
     inquirer.prompt([
       {
         message: 'AWS log group name',

@@ -16,10 +16,6 @@ describe('CLI Spec', () => {
   const cloudWatchService = jest.fn()
   const logGroups = [{ name: 'any-log-group' }]
 
-  // afterEach(() => {
-  //   jest.clearAllMocks()
-  // })
-
   beforeEach(() => {
     loadCachedValues.mockImplementation(() => ({ profile, region, logGroupName }))
     setCacheValues.mockImplementation(() => jest.fn())
@@ -27,8 +23,8 @@ describe('CLI Spec', () => {
       cloudWatchService
     }))
     tailLog.mockImplementation(() => jest.fn())
-    prompts.first.mockImplementation(() => ({ profile, region }))
-    prompts.second.mockImplementation(() => ({ logGroupName }))
+    prompts.selectProfileAndRegion.mockImplementation(() => ({ profile, region }))
+    prompts.selectLogGroup.mockImplementation(() => ({ logGroupName }))
     loadLogGroups.mockResolvedValue(() => logGroups)
     configureCommander.mockImplementation(() => ({ opts: { rerun: false } }))
   })

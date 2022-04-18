@@ -1,7 +1,8 @@
-const { warn, node } = require('simple-output')
 const { loadCachedValues, setCacheValues } = require('./cache')
 const { checkVersion, configureCommander, prompts } = require('./utils')
 const { tailLog, configureAWSCredentials, loadLogGroups } = require('./aws')
+
+const { warn, node } = require('simple-output')
 const Cache = require('lru-cache-fs')
 
 const cacheService = new Cache({ max: 10, cacheName: 'cwt-rerun-cache' })
@@ -21,12 +22,12 @@ const reRun = async () => {
 
 const runInterative = async () => {
   const { profile: profileCached, region: regionCached } = loadCachedValues(cacheService)
-  const { profile, region } = await prompts.first(profileCached, regionCached)
+  const { profile, region } = await prompts.selectProfileAndRegion(profileCached, regionCached)
 
   const { cloudWatchService } = configureAWSCredentials(profile, region)
   const logGroups = await loadLogGroups(cloudWatchService)
 
-  const { logGroupName } = await prompts.second(logGroups)
+  const { logGroupName } = await prompts.selectLogGroup(logGroups)
 
   setCacheValues({ cacheService, profile, region, logGroupName })
   tailLog(cloudWatchService, logGroupName)
