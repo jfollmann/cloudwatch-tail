@@ -1,8 +1,9 @@
 const cli = require('../src/cli')
 const { loadCachedValues, setCacheValues } = require('../src/cache')
-const { warn, node } = require('simple-output')
 const { configureAWSCredentials, tailLog, loadLogGroups } = require('../src/aws')
 const { prompts, configureCommander } = require('../src/utils')
+
+const { warn, node } = require('simple-output')
 
 jest.mock('../src/cache')
 jest.mock('../src/aws')
