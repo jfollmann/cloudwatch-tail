@@ -1,15 +1,20 @@
+const { configureAWSCredentials, loadLogGroups, tailLog } = require('../src/aws')
+
 const { CloudWatchLogs } = require('aws-sdk')
 const AWS = require('aws-sdk')
-const { configureAWSCredentials, loadLogGroups, tailLog } = require('../src/aws')
 
 jest.mock('aws-sdk')
 
 describe('AWS Spec', () => {
   const profile = 'any_profile'
   const region = 'any_region'
-  const logGroupName = 'any_log_group'
-  const describeLogGroupValue = { logGroups: [{ logGroupName }] }
-  const describeLogGroupsPromise = jest.fn().mockResolvedValue(describeLogGroupValue)
+  const [logGroupNameOne, logGroupNameTwo] = ['any-log-group-one', 'any-log-group-two']
+  const nextToken = 'any-next-token'
+  const describeLogGroupValueOne = { logGroups: [{ logGroupName: logGroupNameOne }], nextToken }
+  const describeLogGroupValueTwo = { logGroups: [{ logGroupName: logGroupNameTwo }], nextToken: null }
+  const describeLogGroupsPromise = jest.fn()
+    .mockResolvedValueOnce(describeLogGroupValueOne)
+    .mockResolvedValueOnce(describeLogGroupValueTwo)
   const describeLogGroups = jest.fn(() => ({
     promise: describeLogGroupsPromise
   }))
@@ -33,22 +38,28 @@ describe('AWS Spec', () => {
     expect(AWS.CloudWatchLogs).toHaveBeenCalledWith({ region })
   })
 
-  test('Load Log Groups: Should call with correct params', async () => {
-    const sut = await loadLogGroups(cloudWatchService)
+  describe('Load Log Groups', () => {
+    test('Load Log Groups: Should call with correct params', async () => {
+      const sut = await loadLogGroups(cloudWatchService)
 
-    expect(describeLogGroups).toHaveBeenCalled()
-    expect(describeLogGroups).toHaveBeenCalledTimes(1)
-    expect(describeLogGroupsPromise).toHaveBeenCalled()
-    expect(describeLogGroupsPromise).toHaveBeenCalledTimes(1)
-    expect(sut).toEqual([{ name: logGroupName }])
+      expect(describeLogGroups).toHaveBeenCalled()
+      expect(describeLogGroups).toHaveBeenCalledTimes(2)
+      expect(describeLogGroups.mock.calls).toEqual([
+        [{ limit: 50, nextToken: null }],
+        [{ limit: 50, nextToken }]
+      ])
+      expect(describeLogGroupsPromise).toHaveBeenCalled()
+      expect(describeLogGroupsPromise).toHaveBeenCalledTimes(2)
+      expect(sut).toEqual([{ name: logGroupNameOne }, { name: logGroupNameTwo }])
+    })
   })
 
   test('Tail Log: Should call with correct params', async () => {
     jest.useFakeTimers()
 
-    await tailLog(cloudWatchService, logGroupName)
+    await tailLog(cloudWatchService, logGroupNameOne)
 
-    expect(filterLogEvents).toHaveBeenCalledWith({ interleaved: false, logGroupName, startTime: expect.any(Number) })
+    expect(filterLogEvents).toHaveBeenCalledWith({ interleaved: false, logGroupName: logGroupNameOne, startTime: expect.any(Number) })
     expect(filterLogEvents).toHaveBeenCalledTimes(1)
   })
 })

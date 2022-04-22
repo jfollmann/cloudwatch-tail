@@ -12,9 +12,16 @@ const configureAWSCredentials = (profile, region) => {
 }
 
 const loadLogGroups = async (cloudWatchService) => {
-  const { logGroups } = await cloudWatchService.describeLogGroups().promise()
+  const result = []
+  let nextToken = null
+  do {
+    const logGroupsResponse = await cloudWatchService.describeLogGroups({ limit: 50, nextToken }).promise()
 
-  return logGroups.map(({ logGroupName: name }) => ({ name }))
+    result.push(...logGroupsResponse.logGroups)
+    nextToken = logGroupsResponse.nextToken
+  } while (nextToken)
+
+  return result.map(({ logGroupName: name }) => ({ name }))
 }
 
 const tailLog = async (cloudWatchService, logGroupName, interval = 1000) => {
