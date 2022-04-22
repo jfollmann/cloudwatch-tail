@@ -4,14 +4,12 @@ const pkg = require('../package.json')
 const { list: listAwsRegions } = require('aws-regions')
 const childProcess = require('child_process')
 const { hint } = require('simple-output')
+const inquirer = require('inquirer')
 
 jest.mock('simple-output')
 jest.mock('child_process')
 jest.mock('aws-regions')
-jest.mock('inquirer', () => ({
-  prompt: jest.fn((itens) => itens.map(({ type, name, source }) => ({ type, name, source }))),
-  registerPrompt: jest.fn()
-}))
+jest.mock('inquirer')
 
 jest.mock('commander', () => ({
   option: jest.fn().mockReturnThis(),
@@ -93,16 +91,28 @@ describe('Utils Spec', () => {
     })
   })
 
-  test('Check selectProfileAndRegion prompt list', () => {
-    const sut = prompts.selectProfileAndRegion()
+  describe('Validate inquirer prompts', () => {
+    let inquirerPrompt
 
-    expect(sut).toEqual(firstPromptExpected)
-  })
+    beforeEach(() => {
+      inquirerPrompt = jest.fn((itens) => itens.map(({ type, name, source }) => ({ type, name, source })))
+      inquirer.prompt = inquirerPrompt
+      inquirer.registerPrompt = jest.fn()
+    })
 
-  test('Check selectLogGroup prompt list', () => {
-    const sut = prompts.selectLogGroup(logGroups)
+    test('Check selectProfileAndRegion prompt list', () => {
+      const sut = prompts.selectProfileAndRegion()
 
-    expect(sut).toEqual(secondPromptExpected)
+      expect(sut).toEqual(firstPromptExpected)
+      expect(inquirerPrompt).toHaveBeenCalledTimes(1)
+    })
+
+    test('Check selectLogGroup prompt list', () => {
+      const sut = prompts.selectLogGroup(logGroups)
+
+      expect(sut).toEqual(secondPromptExpected)
+      expect(inquirerPrompt).toHaveBeenCalledTimes(1)
+    })
   })
 
   test('Configure Commander: Should call with correct params', () => {

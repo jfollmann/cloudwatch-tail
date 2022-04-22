@@ -4,12 +4,18 @@ describe('Cache Spec', () => {
   const profile = 'any-profile'
   const region = 'any-region'
   const logGroupName = 'any-log-group'
-
   const values = { profile, region, logGroupName }
-  const get = jest.fn((key) => values[key])
-  const set = jest.fn((key, value) => { values[key] = value })
-  const fsDump = jest.fn()
-  const cacheService = { get, set, fsDump }
+  let get
+  let set
+  let fsDump
+  let cacheService
+
+  beforeEach(() => {
+    get = jest.fn((key) => values[key])
+    set = jest.fn((key, value) => { values[key] = value })
+    fsDump = jest.fn()
+    cacheService = { get, set, fsDump }
+  })
 
   test('Load Cached Values: Should call with correct params', () => {
     const sut = loadCachedValues(cacheService)

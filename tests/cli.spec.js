@@ -14,10 +14,11 @@ describe('CLI Spec', () => {
   const profile = 'any-profile'
   const region = 'any-region'
   const logGroupName = 'any-log-group-name'
-  const cloudWatchService = jest.fn()
   const logGroups = [{ name: 'any-log-group' }]
+  let cloudWatchService
 
   beforeEach(() => {
+    cloudWatchService = jest.fn()
     loadCachedValues.mockImplementation(() => ({ profile, region, logGroupName }))
     setCacheValues.mockImplementation(() => jest.fn())
     configureAWSCredentials.mockImplementation(() => ({
