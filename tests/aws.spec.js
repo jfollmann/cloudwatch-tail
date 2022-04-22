@@ -1,13 +1,15 @@
 const { configureAWSCredentials, loadLogGroups, tailLog } = require('../src/aws')
+const { getLoader } = require('../src/utils')
 
 const { CloudWatchLogs } = require('aws-sdk')
 const AWS = require('aws-sdk')
 
 jest.mock('aws-sdk')
+jest.mock('../src/utils')
 
 describe('AWS Spec', () => {
-  const profile = 'any_profile'
-  const region = 'any_region'
+  const profile = 'any-profile'
+  const region = 'any-region'
   const [logGroupNameOne, logGroupNameTwo] = ['any-log-group-one', 'any-log-group-two']
   const nextToken = 'any-next-token'
   const describeLogGroupValueOne = { logGroups: [{ logGroupName: logGroupNameOne }], nextToken }
@@ -39,9 +41,18 @@ describe('AWS Spec', () => {
   })
 
   describe('Load Log Groups', () => {
+    const loaderStop = jest.fn()
+    const loaderStart = jest.fn().mockImplementation(() => ({ stop: loaderStop }))
+
+    beforeEach(() => {
+      getLoader.mockImplementation(() => ({ start: loaderStart }))
+    })
+
     test('Load Log Groups: Should call with correct params', async () => {
       const sut = await loadLogGroups(cloudWatchService)
 
+      expect(loaderStart).toHaveBeenCalledTimes(1)
+      expect(loaderStop).toHaveBeenCalledTimes(1)
       expect(describeLogGroups).toHaveBeenCalled()
       expect(describeLogGroups).toHaveBeenCalledTimes(2)
       expect(describeLogGroups.mock.calls).toEqual([

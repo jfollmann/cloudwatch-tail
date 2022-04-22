@@ -4,6 +4,7 @@ const { warn } = require('simple-output')
 const { promisify } = require('util')
 const { exec } = require('child_process')
 const { list: listAwsRegions } = require('aws-regions')
+const loader = require('loading-cli')
 const commander = require('commander')
 const inquirer = require('inquirer')
 inquirer.registerPrompt('autocomplete', require('inquirer-autocomplete-prompt'))
@@ -76,6 +77,11 @@ const checkVersion = async () => {
   }
 }
 
+const getLoader = (text, color = 'yellow') => {
+  const frames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏']
+  return loader({ text, color, frames })
+}
+
 module.exports = {
   prompts,
   checkVersion,
@@ -83,5 +89,6 @@ module.exports = {
   execAsync,
   adaptAWSRegions,
   handlerRegions,
-  handlerLogGroups
+  handlerLogGroups,
+  getLoader
 }

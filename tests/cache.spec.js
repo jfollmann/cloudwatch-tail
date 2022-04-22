@@ -1,9 +1,9 @@
 const { loadCachedValues, setCacheValues } = require('../src/cache')
 
 describe('Cache Spec', () => {
-  const profile = 'any_profile'
-  const region = 'any_region'
-  const logGroupName = 'any_log_group'
+  const profile = 'any-profile'
+  const region = 'any-region'
+  const logGroupName = 'any-log-group'
 
   const values = { profile, region, logGroupName }
   const get = jest.fn((key) => values[key])

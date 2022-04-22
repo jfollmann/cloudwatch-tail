@@ -42,6 +42,7 @@
     "commander": "^9.1.0",
     "inquirer": "^8.2.2",
     "inquirer-fuzzy-path": "^2.3.0",
+    "loading-cli": "^1.1.0",
     "lru-cache-fs": "^2.0.1",
     "simple-output": "^3.0.0"
   },

@@ -1,4 +1,4 @@
-const { prompts, configureCommander, checkVersion, adaptAWSRegions, handlerRegions, handlerLogGroups } = require('../src/utils')
+const { prompts, configureCommander, checkVersion, adaptAWSRegions, handlerRegions, handlerLogGroups, getLoader } = require('../src/utils')
 const pkg = require('../package.json')
 
 const { list: listAwsRegions } = require('aws-regions')
@@ -147,6 +147,31 @@ describe('Utils Spec', () => {
         [`Run npm i -g ${pkg.name} to update\r\n`]
       ])
       expect(warn).toHaveBeenCalledTimes(2)
+    })
+  })
+
+  describe('Get Loader', () => {
+    const loaderText = 'any-loader-text'
+    test('Should call with text only', () => {
+      const sut = getLoader(loaderText)
+
+      expect(sut).toMatchObject({
+        options: {
+          text: loaderText,
+          color: 'yellow'
+        }
+      })
+    })
+
+    test('Should call with text and color', () => {
+      const sut = getLoader(loaderText, 'red')
+
+      expect(sut).toMatchObject({
+        options: {
+          text: loaderText,
+          color: 'red'
+        }
+      })
     })
   })
 })

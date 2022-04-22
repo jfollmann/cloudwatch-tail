@@ -1,5 +1,6 @@
 const { info } = require('simple-output')
 const AWS = require('aws-sdk')
+const { getLoader } = require('./utils')
 
 const configureAWSCredentials = (profile, region) => {
   const credentials = new AWS.SharedIniFileCredentials({ profile })
@@ -14,6 +15,7 @@ const configureAWSCredentials = (profile, region) => {
 const loadLogGroups = async (cloudWatchService) => {
   const result = []
   let nextToken = null
+  const loaderLogGroups = getLoader('Loading log groups').start()
   do {
     const logGroupsResponse = await cloudWatchService.describeLogGroups({ limit: 50, nextToken }).promise()
 
@@ -21,6 +23,8 @@ const loadLogGroups = async (cloudWatchService) => {
     nextToken = logGroupsResponse.nextToken
   } while (nextToken)
 
+  loaderLogGroups.stop()
+  console.log({ size: result.length })
   return result.map(({ logGroupName: name }) => ({ name }))
 }
 
