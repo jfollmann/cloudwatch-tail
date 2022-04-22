@@ -1,6 +1,6 @@
 const pkg = require('../package.json')
 
-const { warn } = require('simple-output')
+const { hint } = require('simple-output')
 const { promisify } = require('util')
 const { exec } = require('child_process')
 const { list: listAwsRegions } = require('aws-regions')
@@ -72,8 +72,8 @@ const checkVersion = async () => {
   const currentRemoteVersion = (await execAsync(`npm view ${pkg.name} version`)).stdout.replace(/\r?\n|\r/g, '')
 
   if (currentLocalVersion !== currentRemoteVersion) {
-    warn(`Update available: ${currentLocalVersion} => ${currentRemoteVersion}`)
-    warn(`Run npm i -g ${pkg.name} to update\r\n`)
+    hint(`Update available: ${currentLocalVersion} => ${currentRemoteVersion}`)
+    hint(`Run npm i -g ${pkg.name} to update\r\n`)
   }
 }
 

@@ -3,7 +3,7 @@ const pkg = require('../package.json')
 
 const { list: listAwsRegions } = require('aws-regions')
 const childProcess = require('child_process')
-const { warn } = require('simple-output')
+const { hint } = require('simple-output')
 
 jest.mock('simple-output')
 jest.mock('child_process')
@@ -122,11 +122,11 @@ describe('Utils Spec', () => {
 
       await checkVersion()
 
-      expect(warn.mock.calls).toEqual([
+      expect(hint.mock.calls).toEqual([
         [`Update available: ${pkg.version} => ${oldVersion}`],
         [`Run npm i -g ${pkg.name} to update\r\n`]
       ])
-      expect(warn).toHaveBeenCalledTimes(2)
+      expect(hint).toHaveBeenCalledTimes(2)
     })
 
     test('Current Version: don`t notify new version', async () => {
@@ -134,7 +134,7 @@ describe('Utils Spec', () => {
 
       await checkVersion()
 
-      expect(warn).toHaveBeenCalledTimes(0)
+      expect(hint).toHaveBeenCalledTimes(0)
     })
 
     test('New Version: check to notify new version', async () => {
@@ -142,11 +142,11 @@ describe('Utils Spec', () => {
 
       await checkVersion()
 
-      expect(warn.mock.calls).toEqual([
+      expect(hint.mock.calls).toEqual([
         [`Update available: ${pkg.version} => ${newVersion}`],
         [`Run npm i -g ${pkg.name} to update\r\n`]
       ])
-      expect(warn).toHaveBeenCalledTimes(2)
+      expect(hint).toHaveBeenCalledTimes(2)
     })
   })
 
