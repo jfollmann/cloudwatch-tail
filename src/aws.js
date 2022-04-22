@@ -15,7 +15,7 @@ const configureAWSCredentials = (profile, region) => {
 const loadLogGroups = async (cloudWatchService) => {
   const result = []
   let nextToken = null
-  const loaderLogGroups = getLoader('Loading log groups').start()
+  const loaderLogGroups = getLoader('Loading AWS Log Groups').start()
   do {
     const logGroupsResponse = await cloudWatchService.describeLogGroups({ limit: 50, nextToken }).promise()
 
@@ -24,7 +24,6 @@ const loadLogGroups = async (cloudWatchService) => {
   } while (nextToken)
 
   loaderLogGroups.stop()
-  console.log({ size: result.length })
   return result.map(({ logGroupName: name }) => ({ name }))
 }
 
