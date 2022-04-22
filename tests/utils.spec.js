@@ -1,10 +1,13 @@
 const { prompts, configureCommander, checkVersion, adaptAWSRegions, handlerRegions, handlerLogGroups } = require('../src/utils')
+const pkg = require('../package.json')
+
+const { list: listAwsRegions } = require('aws-regions')
 const childProcess = require('child_process')
 const { warn } = require('simple-output')
-const pkg = require('../package.json')
 
 jest.mock('simple-output')
 jest.mock('child_process')
+jest.mock('aws-regions')
 jest.mock('inquirer', () => ({
   prompt: jest.fn((itens) => itens.map(({ type, name, source }) => ({ type, name, source }))),
   registerPrompt: jest.fn()
@@ -18,35 +21,52 @@ jest.mock('commander', () => ({
 }))
 
 describe('Utils Spec', () => {
-  const logGroups = [{ name: 'any-log-group-name-1' }, { name: 'any-log-group-name-2' }]
+  const [logGroupNameOne, logGroupNameTwo] = ['any-log-group-name-1', 'any-log-group-name-2']
+  const logGroups = [{ name: logGroupNameOne }, { name: logGroupNameTwo }]
   const firstPromptExpected = [{ type: 'input', name: 'profile', source: undefined }, { type: 'autocomplete', name: 'region', source: expect.any(Function) }]
   const secondPromptExpected = [{ type: 'autocomplete', name: 'logGroupName', source: expect.any(Function) }]
-  const regionName = 'any-region-name'
-  const regionCode = 'any-region-code'
-  const regions = [{ name: regionName, code: regionCode }]
+  const [regionNameOne, regionNameTwo] = ['any-region-name-one', 'any-region-name-two']
+  const [regionCodeOne, regionCodeTwo] = ['any-region-code-one', 'any-region-code-one']
+  const regions = [{ name: regionNameOne, code: regionCodeOne }, { name: regionNameTwo, code: regionCodeTwo }]
+
+  beforeEach(() => {
+    listAwsRegions.mockReturnValue(regions)
+  })
 
   test('Adapt AWS Regions', () => {
     const sut = adaptAWSRegions(regions)
 
-    expect(sut).toEqual([{ name: `${regionName} (${regionCode})`, value: regionCode }])
+    expect(sut).toEqual([
+      { name: `${regionNameOne} (${regionCodeOne})`, value: regionCodeOne },
+      { name: `${regionNameTwo} (${regionCodeTwo})`, value: regionCodeTwo }
+    ])
   })
 
   describe('Handler Regions', () => {
-    test('Should call with correct params', () => {
-      const sut = handlerRegions(undefined, 'us-east-1')
+    test('Should call with found value', () => {
+      const sut = handlerRegions(undefined, regionNameOne)
 
-      expect(sut).toEqual([{ name: 'N. Virginia (us-east-1)', value: 'us-east-1' }])
+      expect(sut).toEqual([{ name: `${regionNameOne} (${regionCodeOne})`, value: regionCodeOne }])
     })
 
-    test('Should call with wrong params', () => {
-      const sut = handlerRegions(undefined, 'value-not-found')
+    test('Should call with not found value', () => {
+      const sut = handlerRegions(undefined, 'not-found-name')
 
       expect(sut).toEqual([])
+    })
+
+    test('Should call with undefined value', () => {
+      const sut = handlerRegions(undefined, undefined)
+
+      expect(sut).toEqual([
+        { name: `${regionNameOne} (${regionCodeOne})`, value: regionCodeOne },
+        { name: `${regionNameTwo} (${regionCodeTwo})`, value: regionCodeTwo }
+      ])
     })
   })
 
   describe('Handler Log Groups', () => {
-    test('Should call with correct params: filter contains', () => {
+    test('Should call with found value', () => {
       const sut = handlerLogGroups(logGroups, undefined, 'any-log')
 
       expect(sut).toEqual(logGroups)
@@ -60,20 +80,26 @@ describe('Utils Spec', () => {
       expect(sut).toEqual([expected])
     })
 
-    test('Should call with wrong params', () => {
+    test('Should call with not found value', () => {
       const sut = handlerLogGroups(logGroups, undefined, 'value-not-found')
 
       expect(sut).toEqual([])
     })
+
+    test('Should call with undefined value', () => {
+      const sut = handlerLogGroups(logGroups, undefined, undefined)
+
+      expect(sut).toEqual(logGroups)
+    })
   })
 
-  test('Check first prompts list', () => {
+  test('Check selectProfileAndRegion prompt list', () => {
     const sut = prompts.selectProfileAndRegion()
 
     expect(sut).toEqual(firstPromptExpected)
   })
 
-  test('Check second prompts list', () => {
+  test('Check selectLogGroup prompt list', () => {
     const sut = prompts.selectLogGroup(logGroups)
 
     expect(sut).toEqual(secondPromptExpected)
