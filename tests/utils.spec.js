@@ -113,6 +113,15 @@ describe('Utils Spec', () => {
       expect(sut).toEqual(secondPromptExpected)
       expect(inquirerPrompt).toHaveBeenCalledTimes(1)
     })
+
+    test('Check selectLogGroup.source prompt to have been called', () => {
+      const [sut] = prompts.selectLogGroup(logGroups)
+
+      const response = sut.source(undefined, 'any-log')
+
+      expect(response).toEqual(logGroups)
+      expect(inquirerPrompt).toHaveBeenCalledTimes(1)
+    })
   })
 
   test('Configure Commander: Should call with correct params', () => {
