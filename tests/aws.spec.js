@@ -8,20 +8,22 @@ jest.mock('aws-sdk')
 jest.mock('../src/utils')
 
 describe('AWS Spec', () => {
-  const profile = 'any-profile'
-  const region = 'any-region'
+  describe('Configure AWS Credentials', () => {
+    const profile = 'any-profile'
+    const region = 'any-region'
 
-  test('Configure AWS Credentials: Should call with correct params', () => {
-    const sut = configureAWSCredentials(profile, region)
+    test('Configure AWS Credentials: Should call with correct params', () => {
+      const sut = configureAWSCredentials(profile, region)
 
-    expect(sut).toMatchObject({
-      credentials: expect.any(Object),
-      cloudWatchService: expect.any(CloudWatchLogs)
+      expect(sut).toMatchObject({
+        credentials: expect.any(Object),
+        cloudWatchService: expect.any(CloudWatchLogs)
+      })
+      expect(AWS.SharedIniFileCredentials).toHaveBeenCalledTimes(1)
+      expect(AWS.SharedIniFileCredentials).toHaveBeenCalledWith({ profile })
+      expect(AWS.CloudWatchLogs).toHaveBeenCalledTimes(1)
+      expect(AWS.CloudWatchLogs).toHaveBeenCalledWith({ region })
     })
-    expect(AWS.SharedIniFileCredentials).toHaveBeenCalledTimes(1)
-    expect(AWS.SharedIniFileCredentials).toHaveBeenCalledWith({ profile })
-    expect(AWS.CloudWatchLogs).toHaveBeenCalledTimes(1)
-    expect(AWS.CloudWatchLogs).toHaveBeenCalledWith({ region })
   })
 
   describe('Log Groups & Tail Log', () => {
