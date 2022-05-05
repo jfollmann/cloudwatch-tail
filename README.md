@@ -1,6 +1,12 @@
-# CloudWatchTail (CWT) &middot; ![GitHub](https://img.shields.io/github/license/jfollmann/cloudwatch-tail) ![GitHub package.json version (branch)](https://img.shields.io/github/package-json/v/jfollmann/cloudwatch-tail/main) ![node-current](https://img.shields.io/node/v/cloudwatch-tail) [![CI](https://github.com/jfollmann/cloudwatch-tail/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/jfollmann/cloudwatch-tail/actions/workflows/CI.yml) [![Coverage Status](https://coveralls.io/repos/github/jfollmann/cloudwatch-tail/badge.svg?branch=main)](https://coveralls.io/github/jfollmann/cloudwatch-tail?branch=main)
-
+# CloudWatchTail (CWT)
 CLI Utility for Watching AWS CloudWatch Logs
+
+![Github](https://img.shields.io/badge/jfollmann-cloudwatch--tail-orange)
+![GitHub](https://img.shields.io/github/license/jfollmann/cloudwatch-tail)
+![GitHub package.json version (branch)](https://img.shields.io/github/package-json/v/jfollmann/cloudwatch-tail/main)
+![node-current](https://img.shields.io/node/v/cloudwatch-tail)
+[![CI](https://github.com/jfollmann/cloudwatch-tail/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/jfollmann/cloudwatch-tail/actions/workflows/CI.yml)
+[![Coverage Status](https://coveralls.io/repos/github/jfollmann/cloudwatch-tail/badge.svg?branch=main)](https://coveralls.io/github/jfollmann/cloudwatch-tail?branch=main)
 
 ## Table of Contents
 - [Install](#computer-install)
