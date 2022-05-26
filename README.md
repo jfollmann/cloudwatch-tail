@@ -15,6 +15,7 @@ CLI Utility for Watching AWS CloudWatch Logs
 - [Repeat the last tail](#repeat-repeat-the-last-tail)
 - [Features](#heart_eyes-features)
 - [Help](#raising_hand-help)
+- [Contributors](#tada-contributors)
 
 ## :computer: Install
 ```bash
@@ -65,5 +66,14 @@ Options:
   -v, --version  output the version number
   -h, --help     display help for command
 ```
+
+<br />
+
+## :tada: Contributors
+<a href="https://github.com/jfollmann/cloudwatch-tail/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=jfollmann/cloudwatch-tail" />
+</a>
+
+Made with [contrib.rocks](https://contrib.rocks).
 
 © 2022 [Jefferson Follmann](https://jfollmann.com)
