@@ -7,6 +7,7 @@ CLI Utility for Watching AWS CloudWatch Logs
 ![node-current](https://img.shields.io/node/v/cloudwatch-tail)
 [![CI](https://github.com/jfollmann/cloudwatch-tail/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/jfollmann/cloudwatch-tail/actions/workflows/CI.yml)
 [![Coverage Status](https://coveralls.io/repos/github/jfollmann/cloudwatch-tail/badge.svg?branch=main)](https://coveralls.io/github/jfollmann/cloudwatch-tail?branch=main)
+[![CodeFactor](https://www.codefactor.io/repository/github/jfollmann/cloudwatch-tail/badge)](https://www.codefactor.io/repository/github/jfollmann/cloudwatch-tail)
 
 ## Table of Contents
 - [Install](#computer-install)
