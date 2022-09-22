@@ -1,15 +1,11 @@
-const loadCachedValues = (cacheService) => {
-  const profile = cacheService.get('profile')
-  const region = cacheService.get('region')
-  const logGroupName = cacheService.get('logGroupName')
-
-  return { profile, region, logGroupName }
+const loadCachedValues = (cacheService, cacheKey) => {
+  const cacheValue = cacheService.get(cacheKey)
+  if (!cacheValue) return { }
+  return JSON.parse(cacheValue)
 }
 
-const setCacheValues = ({ cacheService, profile, region, logGroupName }) => {
-  cacheService.set('profile', profile)
-  cacheService.set('region', region)
-  cacheService.set('logGroupName', logGroupName)
+const setCacheValues = (cacheService, cacheKey, cacheValue) => {
+  cacheService.set(cacheKey, JSON.stringify(cacheValue))
   cacheService.fsDump()
 }
 

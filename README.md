@@ -64,6 +64,7 @@ Usage: cwt [options]
 
 Options:
   -r, --rerun    Re run (default: false)
+  -a, --alias <alias saved>  Re Run with saved alias
   -v, --version  output the version number
   -h, --help     display help for command
 ```

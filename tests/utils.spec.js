@@ -21,8 +21,9 @@ jest.mock('commander', () => ({
 describe('Utils Spec', () => {
   const [logGroupNameOne, logGroupNameTwo] = ['any-log-group-name-1', 'any-log-group-name-2']
   const logGroups = [{ name: logGroupNameOne }, { name: logGroupNameTwo }]
-  const firstPromptExpected = [{ type: 'input', name: 'profile', source: undefined }, { type: 'autocomplete', name: 'region', source: expect.any(Function) }]
-  const secondPromptExpected = [{ type: 'autocomplete', name: 'logGroupName', source: expect.any(Function) }]
+  const selectProfileAndRegionExpected = [{ type: 'input', name: 'profile', source: undefined }, { type: 'autocomplete', name: 'region', source: expect.any(Function) }]
+  const selectLogGroupdExpected = [{ type: 'autocomplete', name: 'logGroupName', source: expect.any(Function) }]
+  const selectCacheKeyExpected = [{ type: 'input', name: 'savedCacheKey', source: undefined }]
   const [regionNameOne, regionNameTwo] = ['any-region-name-one', 'any-region-name-two']
   const [regionCodeOne, regionCodeTwo] = ['any-region-code-one', 'any-region-code-one']
   const regions = [{ name: regionNameOne, code: regionCodeOne }, { name: regionNameTwo, code: regionCodeTwo }]
@@ -103,14 +104,14 @@ describe('Utils Spec', () => {
     test('Check selectProfileAndRegion prompt list', () => {
       const sut = prompts.selectProfileAndRegion()
 
-      expect(sut).toEqual(firstPromptExpected)
+      expect(sut).toEqual(selectProfileAndRegionExpected)
       expect(inquirerPrompt).toHaveBeenCalledTimes(1)
     })
 
     test('Check selectLogGroup prompt list', () => {
       const sut = prompts.selectLogGroup(logGroups)
 
-      expect(sut).toEqual(secondPromptExpected)
+      expect(sut).toEqual(selectLogGroupdExpected)
       expect(inquirerPrompt).toHaveBeenCalledTimes(1)
     })
 
@@ -120,6 +121,13 @@ describe('Utils Spec', () => {
       const response = sut.source(undefined, 'any-log')
 
       expect(response).toEqual(logGroups)
+      expect(inquirerPrompt).toHaveBeenCalledTimes(1)
+    })
+
+    test('Check selectCacheKey prompt list', () => {
+      const sut = prompts.selectCacheKey()
+
+      expect(sut).toEqual(selectCacheKeyExpected)
       expect(inquirerPrompt).toHaveBeenCalledTimes(1)
     })
   })

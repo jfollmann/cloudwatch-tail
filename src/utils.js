@@ -55,12 +55,20 @@ const prompts = {
         name: 'logGroupName',
         source: (_, input) => handlerLogGroups(logGroups, _, input)
       }
-    ])
+    ]),
+  selectCacheKey: () => inquirer.prompt([
+    {
+      message: 'Define alias to save this tail (blank to ignore)',
+      type: 'input',
+      name: 'savedCacheKey'
+    }
+  ])
 }
 
 const configureCommander = () => {
   commander
     .option('-r, --rerun', 'Re run', false)
+    .option('-a, --alias <alias saved>', 'Re Run with saved alias')
     .version(pkg.version, '-v, --version')
     .parse(process.argv)
 

@@ -1,40 +1,50 @@
 const { loadCachedValues, setCacheValues } = require('../src/cache')
 
 describe('Cache Spec', () => {
+  const cacheKey = 'any-key'
   const profile = 'any-profile'
   const region = 'any-region'
   const logGroupName = 'any-log-group'
-  const values = { profile, region, logGroupName }
+  const cacheValue = { profile, region, logGroupName }
   let get
   let set
   let fsDump
   let cacheService
 
   beforeEach(() => {
-    get = jest.fn((key) => values[key])
-    set = jest.fn((key, value) => { values[key] = value })
+    get = jest.fn((_) => JSON.stringify(cacheValue))
+    set = jest.fn((key, value) => value)
     fsDump = jest.fn()
     cacheService = { get, set, fsDump }
   })
 
   test('Load Cached Values: Should call with correct params', () => {
-    const sut = loadCachedValues(cacheService)
+    const sut = loadCachedValues(cacheService, cacheKey)
 
-    expect(sut).toEqual(values)
-    expect(get).toHaveBeenCalledTimes(3)
+    expect(sut).toEqual(cacheValue)
+    expect(get).toHaveBeenCalledTimes(1)
     expect(get.mock.calls).toEqual([
-      ['profile'], ['region'], ['logGroupName']
+      [cacheKey]
+    ])
+  })
+
+  test('Load Cached Values: Should call with invalidt cacheKey', () => {
+    get.mockImplementationOnce(() => undefined)
+    const sut = loadCachedValues(cacheService, 'invalid-key')
+
+    expect(sut).toEqual({})
+    expect(get).toHaveBeenCalledTimes(1)
+    expect(get.mock.calls).toEqual([
+      ['invalid-key']
     ])
   })
 
   test('Set Cache Values: Should call with correct params', () => {
-    setCacheValues({ cacheService, profile, region, logGroupName })
+    setCacheValues(cacheService, cacheKey, cacheValue)
 
-    expect(set).toHaveBeenCalledTimes(3)
+    expect(set).toHaveBeenCalledTimes(1)
     expect(set.mock.calls).toEqual([
-      ['profile', profile],
-      ['region', region],
-      ['logGroupName', logGroupName]
+      [cacheKey, JSON.stringify(cacheValue)]
     ])
   })
 })

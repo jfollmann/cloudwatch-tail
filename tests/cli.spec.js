@@ -3,7 +3,7 @@ const { loadCachedValues, setCacheValues } = require('../src/cache')
 const { configureAWSCredentials, tailLog, loadLogGroups } = require('../src/aws')
 const { prompts, configureCommander } = require('../src/utils')
 
-const { warn, node } = require('simple-output')
+const { warn, node, success } = require('simple-output')
 
 jest.mock('../src/cache')
 jest.mock('../src/aws')
@@ -27,6 +27,7 @@ describe('CLI Spec', () => {
     tailLog.mockImplementation(() => jest.fn())
     prompts.selectProfileAndRegion.mockImplementation(() => ({ profile, region }))
     prompts.selectLogGroup.mockImplementation(() => ({ logGroupName }))
+    prompts.selectCacheKey.mockImplementation(() => ({ }))
     loadLogGroups.mockResolvedValue(() => logGroups)
     configureCommander.mockImplementation(() => ({ opts: { rerun: false } }))
   })
@@ -62,6 +63,19 @@ describe('CLI Spec', () => {
       expect(configureAWSCredentials).toHaveBeenCalledTimes(1)
       expect(loadLogGroups).toHaveBeenCalledTimes(1)
       expect(setCacheValues).toHaveBeenCalledTimes(1)
+      expect(tailLog).toHaveBeenCalledTimes(1)
+      expect(tailLog).toHaveBeenCalledWith(cloudWatchService, logGroupName)
+    })
+
+    test('Should call with correct params with save tail', async () => {
+      prompts.selectCacheKey.mockImplementationOnce(() => ({ savedCacheKey: 'any-key' }))
+      await cli.runInterative()
+
+      expect(loadCachedValues).toHaveBeenCalledTimes(1)
+      expect(success).toHaveBeenCalledTimes(1)
+      expect(configureAWSCredentials).toHaveBeenCalledTimes(1)
+      expect(loadLogGroups).toHaveBeenCalledTimes(1)
+      expect(setCacheValues).toHaveBeenCalledTimes(2)
       expect(tailLog).toHaveBeenCalledTimes(1)
       expect(tailLog).toHaveBeenCalledWith(cloudWatchService, logGroupName)
     })
