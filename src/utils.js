@@ -67,8 +67,8 @@ const prompts = {
 
 const configureCommander = () => {
   commander
-    .option('-r, --rerun', 'Re run', false)
-    .option('-a, --alias <alias saved>', 'Re Run with saved alias')
+    .option('-r, --rerun', 're run', false)
+    .option('-a, --alias <alias saved>', 're run with saved alias')
     .version(pkg.version, '-v, --version')
     .parse(process.argv)
 

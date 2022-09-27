@@ -27,7 +27,7 @@ npm i -g cloudwatch-tail
 
 ## :rocket: CLI in action
   
-![cli](https://github.com/jfollmann/cloudwatch-tail/blob/main/docs/cwt-in-action.gif?raw=true)
+![cli](https://github.com/jfollmann/cloudwatch-tail/blob/main/docs/cwt-action.gif?raw=true)
 
 <br />
 
@@ -52,6 +52,7 @@ cwt
 - Select any log group to start watching
 - Filter log group list (autocomplete fuzzy search)
 - Easy to repeat last tail (`cwt` and `cw` options)
+- Define alias to repeat any tail
 
 <br />
 
@@ -63,8 +64,8 @@ cwt --h
 Usage: cwt [options]
 
 Options:
-  -r, --rerun    Re run (default: false)
-  -a, --alias <alias saved>  Re Run with saved alias
+  -r, --rerun    re run (default: false)
+  -a, --alias <alias saved>  re run with saved alias
   -v, --version  output the version number
   -h, --help     display help for command
 ```
