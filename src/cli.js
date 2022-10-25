@@ -1,4 +1,4 @@
-const { loadCachedValues, setCacheValues } = require('./cache')
+const { loadCachedValues, setCacheValues, dumpCacheValues } = require('./cache')
 const { checkVersion, configureCommander, prompts } = require('./utils')
 const { tailLog, configureAWSCredentials, loadLogGroups } = require('./aws')
 
@@ -41,6 +41,11 @@ const runInterative = async () => {
   tailLog(cloudWatchService, logGroupName)
 }
 
+const showAliasList = () => {
+  const itens = dumpCacheValues(cacheService, cacheKeyRerun)
+  console.table(itens)
+}
+
 const run = async () => {
   node('CloudWatchTail (CWT)')
   await checkVersion()
@@ -48,6 +53,12 @@ const run = async () => {
   if (process.env.CWT_RERUN) { return reRun() }
 
   const { opts } = configureCommander()
+
+  if (opts.listAlias) {
+    showAliasList()
+    return
+  }
+
   opts.rerun || opts.alias ? reRun(opts.alias) : runInterative()
 }
 
@@ -55,5 +66,6 @@ module.exports = {
   cacheService,
   reRun,
   runInterative,
-  run
+  run,
+  showAliasList
 }

@@ -69,6 +69,7 @@ const configureCommander = () => {
   commander
     .option('-r, --rerun', 're run', false)
     .option('-a, --alias <alias saved>', 're run with saved alias')
+    .option('-l --listAlias', 'list all alias saved')
     .version(pkg.version, '-v, --version')
     .parse(process.argv)
 

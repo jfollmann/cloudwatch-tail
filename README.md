@@ -64,10 +64,11 @@ cwt --h
 Usage: cwt [options]
 
 Options:
-  -r, --rerun    re run (default: false)
+  -r, --rerun                re run (default: false)
   -a, --alias <alias saved>  re run with saved alias
-  -v, --version  output the version number
-  -h, --help     display help for command
+  -l --listAlias             list all alias saved
+  -v, --version              output the version number
+  -h, --help                 display help for command
 ```
 
 <br />

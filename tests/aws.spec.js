@@ -12,7 +12,7 @@ describe('AWS Spec', () => {
     const profile = 'any-profile'
     const region = 'any-region'
 
-    test('Configure AWS Credentials: Should call with correct params', () => {
+    test('Should call with correct params', () => {
       const sut = configureAWSCredentials(profile, region)
 
       expect(sut).toMatchObject({
@@ -57,7 +57,7 @@ describe('AWS Spec', () => {
       getLoader.mockImplementation(() => ({ start: loaderStart }))
     })
 
-    test('Load Log Groups: Should call with correct params', async () => {
+    test('Should call with correct params', async () => {
       const sut = await loadLogGroups(cloudWatchService)
 
       expect(loaderStart).toHaveBeenCalledTimes(1)

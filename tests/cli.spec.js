@@ -1,5 +1,5 @@
 const cli = require('../src/cli')
-const { loadCachedValues, setCacheValues } = require('../src/cache')
+const { loadCachedValues, setCacheValues, dumpCacheValues } = require('../src/cache')
 const { configureAWSCredentials, tailLog, loadLogGroups } = require('../src/aws')
 const { prompts, configureCommander } = require('../src/utils')
 
@@ -15,12 +15,15 @@ describe('CLI Spec', () => {
   const region = 'any-region'
   const logGroupName = 'any-log-group-name'
   const logGroups = [{ name: 'any-log-group' }]
+  const aliasSaved = [{ key: 'any-key', profile: 'any_profile', region: 'any_region', logGroupName: 'any-log-group' }]
   let cloudWatchService
 
   beforeEach(() => {
+    delete process.env.CWT_RERUN
     cloudWatchService = jest.fn()
     loadCachedValues.mockImplementation(() => ({ profile, region, logGroupName }))
     setCacheValues.mockImplementation(() => jest.fn())
+    dumpCacheValues.mockImplementation(() => aliasSaved)
     configureAWSCredentials.mockImplementation(() => ({
       cloudWatchService
     }))
@@ -82,28 +85,42 @@ describe('CLI Spec', () => {
   })
 
   describe('Run', () => {
-    test('Should call with with runInterative operation', async () => {
+    test('Should call with runInterative operation', async () => {
       await cli.run()
 
       expect(node).toHaveBeenCalledTimes(1)
       expect(loadCachedValues).toHaveBeenCalledTimes(1)
     })
 
-    test('Should call with with reRun operation', async () => {
-      configureCommander.mockImplementation(() => ({ opts: { rerun: true } }))
+    test('Should call with reRun operation', async () => {
+      configureCommander.mockImplementationOnce(() => ({ opts: { rerun: true } }))
 
       await cli.run()
 
       expect(loadCachedValues).toHaveBeenCalledTimes(1)
-      expect(loadCachedValues).toHaveBeenCalledTimes(1)
     })
 
-    test('Should call with with environment reRun operation', async () => {
+    test('Should call with environment reRun operation', async () => {
       process.env.CWT_RERUN = true
       await cli.run()
 
       expect(loadCachedValues).toHaveBeenCalledTimes(1)
-      expect(loadCachedValues).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('List all alias', () => {
+    test('Should call run with list all alias operation', async () => {
+      configureCommander.mockImplementationOnce(() => ({ opts: { listAlias: true } }))
+
+      await cli.run()
+
+      expect(dumpCacheValues).toHaveBeenCalledTimes(1)
+    })
+
+    test('Should call list all alias with correct params', () => {
+      cli.showAliasList()
+
+      expect(dumpCacheValues).toHaveBeenCalledTimes(1)
     })
   })
 })
