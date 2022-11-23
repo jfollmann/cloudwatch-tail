@@ -77,8 +77,9 @@ describe('AWS Spec', () => {
       jest.useFakeTimers()
 
       await tailLog(cloudWatchService, logGroupNameOne)
+      jest.advanceTimersByTime(3000)
 
-      expect(filterLogEvents).toHaveBeenCalledWith({ interleaved: false, logGroupName: logGroupNameOne, startTime: expect.any(Number) })
+      expect(filterLogEvents).toHaveBeenCalledWith({ interleaved: false, logGroupName: logGroupNameOne, nextToken: null, startTime: expect.any(Number) })
       expect(filterLogEvents).toHaveBeenCalledTimes(1)
     })
   })
