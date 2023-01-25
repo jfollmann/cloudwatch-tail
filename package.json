@@ -1,6 +1,6 @@
 {
   "name": "cloudwatch-tail",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "description": "CLI Utility for Watching AWS CloudWatch Logs.",
   "repository": "jfollmann/cloudwatch-tail",
   "author": {

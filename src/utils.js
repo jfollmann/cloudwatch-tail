@@ -70,6 +70,8 @@ const configureCommander = () => {
     .option('-r, --rerun', 're run', false)
     .option('-a, --alias <alias saved>', 're run with saved alias')
     .option('-l --listAlias', 'list all alias saved')
+    .option('-e --export', 'aliases export to file')
+    .option('-i --import <file name>', 'aliases import from file')
     .version(pkg.version, '-v, --version')
     .parse(process.argv)
 

@@ -67,6 +67,8 @@ Options:
   -r, --rerun                re run (default: false)
   -a, --alias <alias saved>  re run with saved alias
   -l --listAlias             list all alias saved
+  -e --export                aliases export to file
+  -i --import <file name>    aliases import from file
   -v, --version              output the version number
   -h, --help                 display help for command
 ```

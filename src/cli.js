@@ -1,8 +1,9 @@
+const fs = require('fs')
 const { loadCachedValues, setCacheValues, dumpCacheValues } = require('./cache')
 const { checkVersion, configureCommander, prompts } = require('./utils')
 const { tailLog, configureAWSCredentials, loadLogGroups } = require('./aws')
 
-const { warn, node, success } = require('simple-output')
+const { warn, node, success, error } = require('simple-output')
 const Cache = require('lru-cache-fs')
 
 const cacheService = new Cache({ max: 10, cacheName: 'cwt-cache' })
@@ -46,6 +47,24 @@ const showAliasList = () => {
   console.table(itens)
 }
 
+const exportAliases = () => {
+  const fileName = 'cwt-aliases-export.json'
+  const itens = dumpCacheValues(cacheService, cacheKeyRerun)
+  fs.writeFileSync(fileName, JSON.stringify(itens, null, 2))
+  success(`${itens.length} aliases exported with sucess. (file: ${fileName})`)
+}
+
+const importAliases = (file) => {
+  if (!fs.existsSync(file)) {
+    return error(`File "${file}" not found.`)
+  }
+  const contents = JSON.parse(fs.readFileSync(file, 'utf-8'))
+  contents.forEach(({ key, profile, region, logGroupName }) => {
+    setCacheValues(cacheService, key, { profile, region, logGroupName })
+  })
+  success(`${contents.length} aliases imported with success.`)
+}
+
 const run = async () => {
   node('CloudWatchTail (CWT)')
   await checkVersion()
@@ -55,8 +74,15 @@ const run = async () => {
   const { opts } = configureCommander()
 
   if (opts.listAlias) {
-    showAliasList()
-    return
+    return showAliasList()
+  }
+
+  if (opts.export) {
+    return exportAliases()
+  }
+
+  if (opts.import) {
+    return importAliases(opts.import)
   }
 
   opts.rerun || opts.alias ? reRun(opts.alias) : runInterative()
@@ -67,5 +93,7 @@ module.exports = {
   reRun,
   runInterative,
   run,
-  showAliasList
+  showAliasList,
+  exportAliases,
+  importAliases
 }

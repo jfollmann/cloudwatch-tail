@@ -14,9 +14,9 @@ describe('Cache Spec', () => {
 
   beforeEach(() => {
     get = jest.fn((_) => JSON.stringify(cacheValue))
-    set = jest.fn((key, value) => value)
+    set = jest.fn((_, value) => value)
     fsDump = jest.fn()
-    dump = jest.fn().mockImplementation(() => ([{ k: cacheKey, v: JSON.stringify({ profile, region, logGroupName }) }]))
+    dump = jest.fn().mockImplementation(() => ([{ k: cacheKey, v: JSON.stringify(cacheValue) }]))
     cacheService = { get, set, dump, fsDump }
   })
 

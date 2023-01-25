@@ -22,7 +22,7 @@ jobs:
           node-version: 14.x
 
       - name: Restore dependencies
-        run: npm ci
+        run: npm i
 
       - name: Run Tests
         run: npm run test:coverage

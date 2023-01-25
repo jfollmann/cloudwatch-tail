@@ -1,14 +1,16 @@
 const cli = require('../src/cli')
+const fs = require('fs')
 const { loadCachedValues, setCacheValues, dumpCacheValues } = require('../src/cache')
 const { configureAWSCredentials, tailLog, loadLogGroups } = require('../src/aws')
 const { prompts, configureCommander } = require('../src/utils')
 
-const { warn, node, success } = require('simple-output')
+const { warn, node, success, error } = require('simple-output')
 
 jest.mock('../src/cache')
 jest.mock('../src/aws')
 jest.mock('../src/utils')
 jest.mock('simple-output')
+jest.mock('fs')
 
 describe('CLI Spec', () => {
   const profile = 'any-profile'
@@ -33,6 +35,8 @@ describe('CLI Spec', () => {
     prompts.selectCacheKey.mockImplementation(() => ({ }))
     loadLogGroups.mockResolvedValue(() => logGroups)
     configureCommander.mockImplementation(() => ({ opts: { rerun: false } }))
+    fs.existsSync.mockReturnValue(true)
+    fs.readFileSync.mockReturnValue(JSON.stringify(aliasSaved))
   })
 
   describe('Re Run', () => {
@@ -72,6 +76,7 @@ describe('CLI Spec', () => {
 
     test('Should call with correct params with save tail', async () => {
       prompts.selectCacheKey.mockImplementationOnce(() => ({ savedCacheKey: 'any-key' }))
+
       await cli.runInterative()
 
       expect(loadCachedValues).toHaveBeenCalledTimes(1)
@@ -102,6 +107,7 @@ describe('CLI Spec', () => {
 
     test('Should call with environment reRun operation', async () => {
       process.env.CWT_RERUN = true
+
       await cli.run()
 
       expect(loadCachedValues).toHaveBeenCalledTimes(1)
@@ -116,11 +122,40 @@ describe('CLI Spec', () => {
 
       expect(dumpCacheValues).toHaveBeenCalledTimes(1)
     })
+  })
 
-    test('Should call list all alias with correct params', () => {
-      cli.showAliasList()
+  describe('Export aliases', () => {
+    test('Should call run with export aliases operation', async () => {
+      configureCommander.mockImplementationOnce(() => ({ opts: { export: true } }))
+
+      await cli.run()
 
       expect(dumpCacheValues).toHaveBeenCalledTimes(1)
+      expect(fs.writeFileSync).toHaveBeenCalledTimes(1)
+      expect(success).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('Import aliases', () => {
+    const file = 'file.json'
+
+    test('Should call run with import aliases operation with correct file path', async () => {
+      configureCommander.mockImplementationOnce(() => ({ opts: { import: file } }))
+
+      await cli.run()
+
+      expect(setCacheValues).toHaveBeenCalledTimes(1)
+      expect(success).toHaveBeenCalledTimes(1)
+    })
+
+    test('Should call run with import: aliases operation with wrong file path', async () => {
+      configureCommander.mockImplementationOnce(() => ({ opts: { import: file } }))
+      fs.existsSync.mockReturnValueOnce(false)
+
+      await cli.run()
+
+      expect(setCacheValues).toHaveBeenCalledTimes(0)
+      expect(error).toHaveBeenCalledTimes(1)
     })
   })
 })
