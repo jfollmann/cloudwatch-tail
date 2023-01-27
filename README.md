@@ -53,7 +53,7 @@ cwt
 - Filter log group list (autocomplete fuzzy search)
 - Easy to repeat last tail (`cwt` and `cw` options)
 - Define alias to repeat any tail
-
+- Possibility to import/export alias list
 <br />
 
 ## :raising_hand: Help
