@@ -6,7 +6,7 @@ const { tailLog, configureAWSCredentials, loadLogGroups } = require('./aws')
 const { warn, node, success, error } = require('simple-output')
 const Cache = require('lru-cache-fs')
 
-const cacheService = new Cache({ max: 10, cacheName: 'cwt-cache' })
+const cacheService = new Cache({ max: 100, cacheName: 'cwt-cache' })
 const cacheKeyRerun = 'cwt-rerun'
 
 const reRun = async (cachedKeyAlias) => {
