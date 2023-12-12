@@ -11,6 +11,8 @@ jest.mock('../src/aws')
 jest.mock('../src/utils')
 jest.mock('simple-output')
 jest.mock('fs')
+jest.mock('@aws-sdk/credential-providers', () => jest.fn())
+jest.mock('@aws-sdk/client-cloudwatch-logs', () => jest.fn())
 
 describe('CLI Spec', () => {
   const profile = 'any-profile'

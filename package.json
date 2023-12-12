@@ -1,6 +1,6 @@
 {
   "name": "cloudwatch-tail",
-  "version": "1.0.21",
+  "version": "1.0.24",
   "description": "CLI Utility for Watching AWS CloudWatch Logs.",
   "repository": "jfollmann/cloudwatch-tail",
   "author": {
@@ -37,8 +37,9 @@
   },
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-cloudwatch-logs": "^3.470.0",
+    "@aws-sdk/credential-providers": "^3.470.0",
     "aws-regions": "^2.3.1",
-    "aws-sdk": "^2.1108.0",
     "commander": "^9.1.0",
     "inquirer": "^8.2.2",
     "inquirer-fuzzy-path": "^2.3.0",

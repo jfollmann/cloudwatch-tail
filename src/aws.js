@@ -1,14 +1,14 @@
 const { info } = require('simple-output')
-const AWS = require('aws-sdk')
+const { fromIni: AWSLoadProfileFromIni } = require('@aws-sdk/credential-providers')
+const { CloudWatchLogs } = require('@aws-sdk/client-cloudwatch-logs')
 const { getLoader } = require('./utils')
 
 const configureAWSCredentials = (profile, region) => {
-  const credentials = new AWS.SharedIniFileCredentials({ profile })
-  AWS.config.credentials = credentials
+  const credentials = AWSLoadProfileFromIni({ profile })
 
   return {
     credentials,
-    cloudWatchService: new AWS.CloudWatchLogs({ region })
+    cloudWatchService: new CloudWatchLogs({ region, credentials })
   }
 }
 
@@ -17,7 +17,7 @@ const loadLogGroups = async (cloudWatchService) => {
   let nextToken = null
   const loaderLogGroups = getLoader('Loading AWS Log Groups').start()
   do {
-    const logGroupsResponse = await cloudWatchService.describeLogGroups({ limit: 50, nextToken }).promise()
+    const logGroupsResponse = await cloudWatchService.describeLogGroups({ limit: 50, nextToken })
 
     result.push(...logGroupsResponse.logGroups)
     nextToken = logGroupsResponse.nextToken
@@ -37,7 +37,7 @@ const tailLog = async (cloudWatchService, logGroupName, interval = 3000) => {
       interleaved: false,
       startTime,
       nextToken
-    }).promise()
+    })
 
     events.forEach(({ message }) => console.log(message))
 

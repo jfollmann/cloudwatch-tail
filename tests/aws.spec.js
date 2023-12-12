@@ -1,10 +1,11 @@
 const { configureAWSCredentials, loadLogGroups, tailLog } = require('../src/aws')
 const { getLoader } = require('../src/utils')
 
-const { CloudWatchLogs } = require('aws-sdk')
-const AWS = require('aws-sdk')
+const { fromIni: AWSLoadProfileFromIni } = require('@aws-sdk/credential-providers')
+const { CloudWatchLogs } = require('@aws-sdk/client-cloudwatch-logs')
 
-jest.mock('aws-sdk')
+jest.mock('@aws-sdk/credential-providers')
+jest.mock('@aws-sdk/client-cloudwatch-logs')
 jest.mock('../src/utils')
 
 describe('AWS Spec', () => {
@@ -15,14 +16,15 @@ describe('AWS Spec', () => {
     test('Should call with correct params', () => {
       const sut = configureAWSCredentials(profile, region)
 
-      expect(sut).toMatchObject({
-        credentials: expect.any(Object),
-        cloudWatchService: expect.any(CloudWatchLogs)
-      })
-      expect(AWS.SharedIniFileCredentials).toHaveBeenCalledTimes(1)
-      expect(AWS.SharedIniFileCredentials).toHaveBeenCalledWith({ profile })
-      expect(AWS.CloudWatchLogs).toHaveBeenCalledTimes(1)
-      expect(AWS.CloudWatchLogs).toHaveBeenCalledWith({ region })
+      expect(sut).toEqual(
+        expect.objectContaining({
+          cloudWatchService: expect.any(CloudWatchLogs)
+        })
+      )
+      expect(AWSLoadProfileFromIni).toHaveBeenCalledTimes(1)
+      expect(AWSLoadProfileFromIni).toHaveBeenCalledWith({ profile })
+      expect(CloudWatchLogs).toHaveBeenCalledTimes(1)
+      expect(CloudWatchLogs).toHaveBeenCalledWith({ region })
     })
   })
 
@@ -32,25 +34,17 @@ describe('AWS Spec', () => {
     const describeLogGroupValueOne = { logGroups: [{ logGroupName: logGroupNameOne }], nextToken }
     const describeLogGroupValueTwo = { logGroups: [{ logGroupName: logGroupNameTwo }], nextToken: null }
     const filterLogEventsValue = { events: [{ message: 'log-event-001' }] }
-    let describeLogGroupsPromise
     let describeLogGroups
-    let filterLogEventsPromise
     let filterLogEvents
     let cloudWatchService
     let loaderStop
     let loaderStart
 
     beforeEach(() => {
-      describeLogGroupsPromise = jest.fn()
+      describeLogGroups = jest.fn()
         .mockResolvedValueOnce(describeLogGroupValueOne)
         .mockResolvedValueOnce(describeLogGroupValueTwo)
-      describeLogGroups = jest.fn(() => ({
-        promise: describeLogGroupsPromise
-      }))
-      filterLogEventsPromise = jest.fn().mockResolvedValue(filterLogEventsValue)
-      filterLogEvents = jest.fn(() => ({
-        promise: filterLogEventsPromise
-      }))
+      filterLogEvents = jest.fn().mockResolvedValue(filterLogEventsValue)
       cloudWatchService = { describeLogGroups, filterLogEvents }
       loaderStop = jest.fn()
       loaderStart = jest.fn().mockImplementation(() => ({ stop: loaderStop }))
@@ -68,8 +62,6 @@ describe('AWS Spec', () => {
         [{ limit: 50, nextToken: null }],
         [{ limit: 50, nextToken }]
       ])
-      expect(describeLogGroupsPromise).toHaveBeenCalled()
-      expect(describeLogGroupsPromise).toHaveBeenCalledTimes(2)
       expect(sut).toEqual([{ name: logGroupNameOne }, { name: logGroupNameTwo }])
     })
 
